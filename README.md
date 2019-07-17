@@ -1,4 +1,4 @@
 Web site
 
-Trying to create web site with purpose to pratice and get knowledge how does it work.
-Also i want to study django how the most popular framework for site creature.
+Trying to create web site with purpose to practice and get knowledge how does it work.
+Also I want to study Django how the most popular framework for site creature.
