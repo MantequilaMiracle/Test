@@ -27,7 +27,7 @@ def deleterecord(request, pk):
 def pikabutake(request):
 	app_token = "1e732df61e732df61e732df6c61e18fb5b11e731e732df6434546886b716328dd5fd619"
 	domain = "pikabu"
-	count = 5
+	count = 9
 	offset = 1
 	v = 5.101
 	response = requests.get("https://api.vk.com/method/wall.get?",
@@ -45,12 +45,15 @@ def pikabutake(request):
 		text_str = data["text"]
 		photo_list = []
 		#photo_for_text = []
-		for attachment in data["attachments"]:
-			if attachment["type"] == "photo":
-				photo_for_the_text = attachment["photo"]["sizes"][-1]["url"]
-				photo_list.append(photo_for_the_text)
-			else:
-				continue
+		try:
+			for attachment in data["attachments"]:
+				if attachment["type"] == "photo":
+					photo_for_the_text = attachment["photo"]["sizes"][-1]["url"]
+					photo_list.append(photo_for_the_text)
+				else:
+					continue
+		except KeyError:
+			continue
 		#photo_url.append(photo_for_text)
 		data_list.append({"text_data": text_str, "photo_url": photo_list})
 
