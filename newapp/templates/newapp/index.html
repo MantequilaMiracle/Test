@@ -46,6 +46,8 @@
 					<a href="/admin/" style="padding-left: 20px;font-size: 1.5rem; font-color: red;">Admin</a>
 				</div>
 				<div class="content" align="center">
+					{% block filters %}
+					{% endblock %}
 					{% block welcome %}
 					{% endblock %}
 					{% block content %}

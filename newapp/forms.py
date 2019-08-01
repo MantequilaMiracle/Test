@@ -1,8 +1,7 @@
-from django.forms import ModelForm, TextInput
-from .models import Wish
+from django import forms
 
-class WishForm(ModelForm):
-    class Meta:
-        model = Wish
-        fields = ["wishText"]
-        widgets = {"wishText": TextInput(attrs={"class": "form-control","placeholder": "Write a wish"})}
+class PostForm(forms.Form):
+    public = forms.CharField(label="write a domain", max_length = 30)
+    today_posts = forms.BooleanField(required=False)
+    offset = forms.IntegerField(min_value = 0)
+    count = forms.IntegerField(min_value = 0, max_value = 100)

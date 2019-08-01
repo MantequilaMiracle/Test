@@ -1,0 +1,26 @@
+{% extends "newapp/index.html" %}
+  {% block filters %}
+  <form action="" method="post">
+    {% csrf_token %}
+    <div class="container items-left py-2">
+      {{ form }}
+      <sup><button type="sumbit" name class="btn btn-primary btn-sm">submit</button></sup>
+    </div>
+  <form>
+  {% endblock %}
+  {% if first_enter == False %}
+    {% block content%}
+      <div class="py-3 card" style="width: 80%">
+        {% for dataset in data %}
+          {% for url in dataset.photo_url %}
+            <div class="card-img-top">
+              <img src={{ url }} class="img-thumbnail"><br/>
+            </div>
+          {% endfor%}
+            <div class="card-body">
+              <p class="card-text" style="font-size: 120%">{{ dataset.text_data }}</p>
+            </div>
+        {% endfor%}
+      </div>
+      {% endblock%}
+    {% endif%}
