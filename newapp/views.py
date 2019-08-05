@@ -9,36 +9,6 @@ def mainpage(request):
 	context = {"welcome_text": welcome_text}
 	return render(request, "newapp\welcome.html", context)
 
-def pikabutake(request):
-	domain = "pikabu"
-	count = 10
-	offset = 0
-	response = requests.get("https://api.vk.com/method/wall.get?",
-		{"domain": domain,
-		"count": count,
-		"offset": offset,
-		"access_token": app_token,
-		"v": app_version
-		})
-	json_data = response.json()["response"]["items"]
-	data_list = []
-	for data in json_data:
-		text_str = data["text"]
-		photo_list = []
-		try:
-			for attachment in data["attachments"]:
-				if attachment["type"] == "photo":
-					photo_for_the_text = attachment["photo"]["sizes"][-1]["url"]
-					photo_list.append(photo_for_the_text)
-				else:
-					continue
-		except KeyError:
-			continue
-		data_list.append({"text_data": text_str, "photo_url": photo_list})
-
-	context = {"data": data_list}
-	return render(request, "newapp/content.html", context)
-
 def posts(request):
 	data_list = []
 	one_day_seconds = 86400
@@ -82,9 +52,8 @@ def posts(request):
 							#https://vk.com/video+owner_id+_+456288678
 							video_id = str(attachment["video"]["id"])
 							temp = "https://vk.com/video" + owner_id + "_" + video_id
-							print(temp)
 							video_list.append(temp)
-						#TODO: VIDEO AND DOCS
+						#TODO: VIDEO
 						else:
 							continue
 				except KeyError:
@@ -92,4 +61,11 @@ def posts(request):
 				data_list.append({"text_data": text_str, "photo_url": photo_list, "doc_url": doc_list, "video_url": video_list})
 	form = PostForm()
 	context = {"data": data_list, "form": form, "first_enter": first_enter}
-	return render(request, "newapp/alt_content.html", context)
+	return context
+
+def multipost(request):
+	number_of_domain = 0
+	context = []
+
+	context = posts(request)
+	return render(request, "newapp/content.html", context)
