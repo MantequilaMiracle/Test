@@ -1,48 +1,55 @@
 {% extends "newapp/index.html" %}
-  {% block filters %}
-  <form action="" method="post">
-    {% csrf_token %}
-    <div class="container py-3 my-2 rounded" style="background-color: pink; width: 325px;">
-      <table style="width: 300px">
-          {{ form.as_table }}
-          <td><button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button></td>
-          <td><button type="button" name="Add" value="1" class="btn btn-danger btn-md my-2">Add</button></td>
-      </table>
-    </div>
-  <form>
-  {% endblock %}
-  {% block content%}
-    {% if first_enter%}
-      <p class="h1">Enter a domain of public in vk and enjoy</p>
-    {% else %}
-      {% for i in context %}
-        <div class="py-3 card" style="width: 60%">
-          {% for dataset in i.data %}
-            {% if dataset.photo_url %}
-              {% for url in dataset.photo_url %}
-                <div class="card-img-top">
-                  <img src={{ url }} class="img-thumbnail"><br/>
+    {% block filters %}
+    <form action="" method="post">
+      {% csrf_token %}
+      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 325px;" align="left">
+        <table style="width: 300px">
+            {{ form.as_table }}
+            <td><button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button></td>
+        </table>
+      </div>
+    </form>
+    {% endblock %}
+    {% block content%}
+      <div class="container align-items-center p-5">
+      <div class="row">
+      {% for context in total_context %}
+          {% if context.first_enter%}
+            <p class="h1">Enter a domain of public in vk and enjoy</p>
+          {% else %}
+            <div class="col shadow bg-white">
+              <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain}}</p>
+              <hr size="4" color="black">
+              <div class="py-3">
+              {% for dataset in context.data %}
+                {% if dataset.photo_url %}
+                  {% for url in dataset.photo_url %}
+                    <div class="card-img-top">
+                      <img src={{ url }} class="img-thumbnail"><br/>
+                    </div>
+                  {% endfor%}
+                {% elif dataset.doc_url %}
+                  {% for url in dataset.doc_url%}
+                    <div class="card-img-top">
+                      <a href="{{ url }}"><img src="{{ url }}" class="img-thumbnail"></a><br/>
+                    </div>
+                  {% endfor%}
+                {% elif dataset.video_url %}
+                  {% for url in dataset.video_url %}
+                    <div class="card-img-top">
+                      <p class="h2">Do not support video</p>
+                    </div>
+                  {% endfor%}
+                {% endif %}
+                <div class="card-body">
+                  <p class="card-text py-3 my-3" style="font-family: 'Times new roman';font-size: 150%">{{ dataset.text_data }}</p>
                 </div>
+                <hr/>
               {% endfor%}
-            {% elif dataset.doc_url %}
-              {% for url in dataset.doc_url%}
-                <div class="card-img-top">
-                  <a href="{{ url }}"><img src="{{ url }}" class="img-thumbnail"></a><br/>
-                </div>
-              {% endfor%}
-            {% elif dataset.video_url %}
-              {% for url in dataset.video_url %}
-                <div class="card-img-top">
-                  <p class="h2">Do not support video</p>
-                </div>
-              {% endfor%}
-            {% endif %}
-              <div class="card-body">
-                <p class="card-text" style="font-size: 120%">{{ dataset.text_data }}</p>
               </div>
-              <hr/>
-          {% endfor %}
-        {% endfor %}
-      {% endif %}
+            </div>
+            {% endif %}
+      {% endfor %}
+      </div>
     </div>
-    {% endblock%}
+    {% endblock %}
