@@ -9,22 +9,27 @@ def mainpage(request):
 	context = {"welcome_text": welcome_text}
 	return render(request, "newapp/welcome.html", context)
 
+def ses_request(request):
+	request.session.set_test_cookie()
+	if request.session.test_cookie_worked():
+		request.session.delete_test_cookie()
+		return True
+	request.session.delete_test_cookie()
+	return False
+
 def posts(request, form):
 	one_day_seconds = 86400
-	first_enter = True
 	total_context = []
 	if request.method == "POST":
-		first_enter = False
-		#form = PostForm(request.POST)
 		if form.is_valid():
-			domains = [domain.replace(' ','') for domain in form.cleaned_data["public"].split(',')]
-			domains = domains[:3] if len(domains) > 3 else domains
+			# max count of domain is 3
+			domains = {domain.replace(' ','') for domain in form.cleaned_data["public"].split(',') if domain != ''}#[:3]
+			offset = 0 if form.cleaned_data["offset"] == None else form.cleaned_data["offset"]
+			count = 10 if form.cleaned_data["count"] == None else form.cleaned_data["count"]
+			if form.cleaned_data["today_posts"]:
+				count = 100
 			for domain in domains:
 				data_list = []
-				offset = 0 if form.cleaned_data["offset"] == None else form.cleaned_data["offset"]
-				count = 10 if form.cleaned_data["count"] == None else form.cleaned_data["count"]
-				if form.cleaned_data["today_posts"]:
-					count = 100
 				response = requests.get("https://api.vk.com/method/wall.get?",
 					{"domain": domain,
 					"count": count,
@@ -35,9 +40,10 @@ def posts(request, form):
 				try:
 					json_data = response.json()["response"]["items"]
 				except KeyError:
-					text_str = "KeyError"
+					#TODO: do nothing if some troubles with json
+					text_str = "KeyError in " + "{}".format(domain)
 					data_list.append({"text_data": text_str, "photo_url": [], "doc_url": [], "video_url": []})
-					context = {"data": data_list, "first_enter": first_enter}
+					context = {"data": data_list}
 					total_context.append(context)
 					continue
 				owner_id = str(json_data[0]["owner_id"])
@@ -68,7 +74,7 @@ def posts(request, form):
 					except KeyError:
 						continue
 					data_list.append({"text_data": text_str, "photo_url": photo_list, "doc_url": doc_list, "video_url": video_list})
-				context = {"data": data_list, "first_enter": first_enter, "domain": domain}
+				context = {"data": data_list, "domain": domain}
 				total_context.append(context)
 	return total_context
 
