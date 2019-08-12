@@ -20,6 +20,9 @@ def ses_request(request):
 def posts(request, form):
 	one_day_seconds = 86400
 	total_context = []
+
+	if request.method == "GET" and request.GET == "get_more":
+		pass
 	if request.method == "POST":
 		if form.is_valid():
 			# max count of domain is 3
