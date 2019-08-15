@@ -1,21 +1,32 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from .forms import PostForm
 import requests, time
 from .app_token import app_token, app_version
+from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
+
+
 def mainpage(request):
 	welcome_text = "Hello and welcome to mySite. Add more text to see what happened. Теперь пишу по русски потому что можу"
 	context = {"welcome_text": welcome_text}
 	return render(request, "newapp/welcome.html", context)
 
-def ses_request(request):
-	request.session.set_test_cookie()
-	if request.session.test_cookie_worked():
-		request.session.delete_test_cookie()
-		return True
-	request.session.delete_test_cookie()
-	return False
+
+def registerview(request):
+	form = UserCreationForm()
+	if request.method == "POST":
+		form = UserCreationForm(request.POST)
+		try:
+			if form.is_valid:
+				form.save()
+				return HttpResponseRedirect("/accounts/login/")
+		except ValueError as e:
+			err_message = "{}: ".format(e)
+			context = {'form': form, "err": err_message}
+	context = {'form': form, "err": ''}
+	return render(request, 'registration/register.html', context)
+
 
 def posts(request, form):
 	one_day_seconds = 86400
@@ -77,6 +88,7 @@ def posts(request, form):
 				context = {"data": data_list, "domain": domain}
 				total_context.append(context)
 	return total_context
+
 
 def multipost(request):
 	number_of_domain = 0

@@ -11,22 +11,18 @@
     </form>
     {% endblock %}
     {% block content%}
-      <div class="container align-items-center p-5">
-      <div class="row">
+      <div class="container-fluid align-items-center p-5">
+      <div class="row" style="z-index: 1">
       {% for context in total_context %}
-          <div class="col shadow bg-white">
+          <div class="col-md-4 col-offset-1 bg-white">
             <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain}}</p>
             <hr size="4" color="black">
-            <div class="py-3">
+            <div class="row py-3">
             {% for dataset in context.data %}
               {% if dataset.photo_url %}
                 <div class="card-img-top">
                 {% for url in dataset.photo_url %}
-                  {% if forloop.first %}
-                      <img src="{{ url }}" class="img-thumbnail lowscale" height="1280" width="1024">
-                  {% else %}
-                      <img src="{{ url }}" class="img-thumbnail scale" height="240" width="320">
-                  {% endif %}
+                    <img src="{{ url }}" class="img-thumbnail lowscale" height="1280" width="1024">
                 {% endfor%}
                 </div>
               {% elif dataset.doc_url %}
@@ -50,9 +46,6 @@
             </div>
           </div>
       {% endfor %}
-      <form action="#" method="GET">
-        <input type="button" name="getmore" value="getmore_{{ offset }}">
-      </form>
       </div>
     </div>
     {% endblock %}

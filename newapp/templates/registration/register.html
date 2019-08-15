@@ -1,0 +1,17 @@
+{% extends "newapp/index.html"%}
+{% block content %}
+  <form action="" method="post">
+    {% csrf_token %}
+    {% if err %}
+      <div class="h2">
+        <p><i><strong>{{ err }}</strong></i></p>
+      </div>
+    {%endif%}
+    <table>
+      {{ form.as_table }}
+    </table>
+    <div class="btn btn-danger btn-md">
+      <button type="submit" name="register" value="register">register</button>
+    </div>
+  </form>
+{% endblock %}
