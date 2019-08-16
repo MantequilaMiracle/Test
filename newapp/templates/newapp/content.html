@@ -2,8 +2,8 @@
     {% block filters %}
     <form action="" method="post">
       {% csrf_token %}
-      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 325px;" align="left">
-        <table style="width: 300px">
+      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 500px;" align="center">
+        <table style="width: 400px">
             {{ form.as_table }}
             <td><button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button></td>
         </table>
@@ -11,10 +11,10 @@
     </form>
     {% endblock %}
     {% block content%}
-      <div class="container-fluid align-items-center p-5">
+      <div class="container align-items-center" style="margin: 30px">
       <div class="row" style="z-index: 1">
       {% for context in total_context %}
-          <div class="col-md-4 col-offset-1 bg-white">
+          <div class="col bg-white">
             <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain}}</p>
             <hr size="4" color="black">
             <div class="row py-3">
@@ -22,13 +22,13 @@
               {% if dataset.photo_url %}
                 <div class="card-img-top">
                 {% for url in dataset.photo_url %}
-                    <img src="{{ url }}" class="img-thumbnail lowscale" height="1280" width="1024">
+                    <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail lowscale" height="1280" width="1024"></a>
                 {% endfor%}
                 </div>
               {% elif dataset.doc_url %}
                 {% for url in dataset.doc_url%}
                   <div class="card-img-top">
-                    <a href="{{ url }}"><img src="{{ url }}" class="img-thumbnail lowscale"></a><br/>
+                    <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail lowscale"></a><br/>
                   </div>
                 {% endfor%}
               {% elif dataset.video_url %}
