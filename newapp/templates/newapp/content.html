@@ -11,41 +11,47 @@
     </form>
     {% endblock %}
     {% block content%}
-      <div class="container align-items-center" style="margin: 30px">
-      <div class="row" style="z-index: 1">
-      {% for context in total_context %}
-          <div class="col bg-white">
-            <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain}}</p>
-            <hr size="4" color="black">
-            <div class="row py-3">
-            {% for dataset in context.data %}
-              {% if dataset.photo_url %}
-                <div class="card-img-top">
-                {% for url in dataset.photo_url %}
-                    <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail lowscale" height="1280" width="1024"></a>
-                {% endfor%}
-                </div>
-              {% elif dataset.doc_url %}
-                {% for url in dataset.doc_url%}
-                  <div class="card-img-top">
-                    <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail lowscale"></a><br/>
-                  </div>
-                {% endfor%}
-              {% elif dataset.video_url %}
-                {% for url in dataset.video_url %}
-                  <div class="card-img-top">
-                    <p class="h2">Do not support video</p>
-                  </div>
-                {% endfor%}
-              {% endif %}
-              <div class="card-body">
-                <p class="card-text py-3 my-3" style="font-family: 'Times new roman';font-size: 150%">{{ dataset.text_data }}</p>
-              </div>
-              <hr/>
-            {% endfor%}
+      <div class="container-fluid align-items-center" style="padding-left: 50px; padding-right: 100px; margin: 20px">
+        <div class="row shadow">
+          {%for context in total_context%}
+            <div class="col bg-dark" style="color: pink">
+              <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain|default:"*Oops*"}}</p>
+              <hr size="4" color="pink">
             </div>
-          </div>
-      {% endfor %}
+          {% endfor%}
+        </div>
+        <div class="row shadow">
+          {% for context in total_context %}
+            <div class="col bg-white overflow-auto" style="height: 950px;">
+              {% for dataset in context.data %}
+                {% if dataset.photo_url %}
+                  <div class="card-img-top">
+                  {% for url in dataset.photo_url %}
+                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail" height="1280" width="1024"></a>
+                  {% endfor%}
+                  </div>
+                {% elif dataset.doc_url %}
+                  {% for url in dataset.doc_url%}
+                    <div class="card-img-top">
+                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail"></a><br/>
+                    </div>
+                  {% endfor%}
+                {% elif dataset.video_url %}
+                  {% for url in dataset.video_url %}
+                    <div class="card-img-top">
+                      <p class="h2">Do not support video</p>
+                    </div>
+                  {% endfor%}
+                {% endif %}
+                {% if dataset.text_data %}
+                  <div class="card-body rounded bg-primary">
+                    <a class="card-text text-white py-3 my-3" style="font-family: 'Times new roman';font-size: 150%">{{ dataset.text_data }}</a>
+                  </div>
+                {% endif %}
+                <hr size="6" color="black">
+              {% endfor%}
+            </div>
+          {% endfor %}
+        </div>
       </div>
-    </div>
     {% endblock %}

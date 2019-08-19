@@ -14,27 +14,17 @@
     <p>Please login to see this page.</p>
   {% endif %}
 {% endif %}
-
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-<table>
-
-<tr>
-  <td>{{ form.username.label_tag }}</td>
-  <td>{{ form.username }}</td>
-</tr>
-
-<tr>
-  <td>{{ form.password.label_tag }}</td>
-  <td>{{ form.password }}</td>
-</tr>
-</table>
-
-<input type="submit" value="login" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-{# Assumes you setup the password_reset view in your URLconf #}
-<p><a href="{% url 'password_reset' %}">Lost password?</a></p>
-
+<div class="container py-3 my-2 rounded shadow bg-white" style="width: 300px;" align="center">
+  <h2 style="color: pink">Log in</h2>
+  <div class="form-group">
+    <form method="post" action="{% url 'login' %}" class="form-signin">
+      {% csrf_token %}
+      <input type="text" name="username" id="id_username" class="form-control" placeholder="Username" required="" autofocus="">
+      <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required="" autofocus="">
+      <input class="btn btn-block btn-primary" type="submit" value="login" />
+    </form>
+    {# Assumes you setup the password_reset view in your URLconf #}
+    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  </div>
+</div>
 {% endblock %}
