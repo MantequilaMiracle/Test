@@ -39,7 +39,7 @@
                 {% elif dataset.video_url %}
                   {% for url in dataset.video_url %}
                     <div class="card-img-top">
-                      <p class="h2">Do not support video</p>
+                      <a href={{ url }} class="h2">Do not support video</a>
                     </div>
                   {% endfor%}
                 {% endif %}
