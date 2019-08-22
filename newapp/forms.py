@@ -2,16 +2,16 @@ from django import forms
 from django.contrib.auth.models import User
 
 class PostForm(forms.Form):
-    public = forms.CharField(label="publics", max_length = 50, widget=forms.TextInput(attrs={
+    public1 = forms.CharField(label="First public", max_length = 30, widget=forms.TextInput(attrs={
     "placeholder": " Vk public domain",
-    "class": "row-1"
+    "class": "form-control"
     }))
-    offset = forms.IntegerField(required=False, min_value=0, widget=forms.NumberInput(attrs={
-    "placeholder":" default is 0",
-    "class": "row-2"
+    public2 = forms.CharField(required=False, label="one more public", max_length = 30, widget=forms.TextInput(attrs={
+    "placeholder": " Vk public domain",
+    "class": "form-control"
     }))
-    count = forms.IntegerField(required=False, min_value=0, max_value=100, widget=forms.NumberInput(attrs={
-    "placeholder":" default is 10",
-    "class": "row-3"
+    public3 = forms.CharField(required=False, label="one more public", max_length = 30, widget=forms.TextInput(attrs={
+    "placeholder": " Vk public domain",
+    "class": "form-control"
     }))
     today_posts = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={}))

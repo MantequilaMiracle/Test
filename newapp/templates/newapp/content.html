@@ -2,7 +2,7 @@
     {% block filters %}
     <form action="" method="post">
       {% csrf_token %}
-      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 500px;" align="center">
+      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 60%;" align="center">
         <table style="width: 400px">
             {{ form.as_table }}
             <td><button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button></td>
@@ -22,12 +22,12 @@
         </div>
         <div class="row shadow">
           {% for context in total_context %}
-            <div class="col bg-white overflow-auto" style="height: 950px;">
+            <div class="col bg-white overflow-auto" style="height: 600px;">
               {% for dataset in context.data %}
                 {% if dataset.photo_url %}
                   <div class="card-img-top">
                   {% for url in dataset.photo_url %}
-                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail" height="1280" width="1024"></a>
+                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail" height="700" width="500"></a>
                   {% endfor%}
                   </div>
                 {% elif dataset.doc_url %}

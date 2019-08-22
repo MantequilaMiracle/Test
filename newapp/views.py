@@ -4,6 +4,7 @@ from .forms import PostForm
 import requests, time
 from .app_token import app_token, app_version
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -28,7 +29,16 @@ def registerview(request):
 	return render(request, 'registration/register.html', context)
 
 
-def post(domain, today_posts, count=10, offset=0):
+@login_required
+def profile(request):
+	welcome_text = "Hello and welcome to mySite, " + str(request.user)
+	context = {"welcome_text": welcome_text}
+	return render(request, "registration/profile.html", context)
+
+
+def post(domain, today_posts):
+	count = 10
+	offset = 0
 	one_day_seconds = 86400
 	context = {}
 	if today_posts:
@@ -89,14 +99,12 @@ def multipost(request):
 		form = PostForm(request.POST)
 		if form.is_valid():
 			domain_counter = 0
-			domains = {domain.replace(' ','') for domain in form.cleaned_data["public"].split(',') if domain != ''}
-			count = form.cleaned_data["count"]
-			offset = form.cleaned_data["offset"]
+			domains = [domain for domain in [form.cleaned_data["public%i"%i].replace(' ', '') for i in range(1,4)] if domain != '']
 			today_posts = form.cleaned_data["today_posts"]
 			for domain in domains:
 				if domain_counter > 3:
 					domains.clear()
 					break
-				total_context.append(post(domain, today_posts, count, offset))
+				total_context.append(post(domain, today_posts))
 				domain_counter += 1
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
