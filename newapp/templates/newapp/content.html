@@ -2,11 +2,30 @@
     {% block filters %}
     <form action="" method="post">
       {% csrf_token %}
-      <div class="container py-3 my-2 rounded shadow bg-white" style="width: 60%;" align="center">
-        <table style="width: 400px">
-            {{ form.as_table }}
-            <td><button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button></td>
-        </table>
+      <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+        </button>
+        <div class="dropdown-menu p-3" style="width: 400px">
+          <span class="dropdown-item-text text-muted">Enter publics</span>
+          <div class="form-group">
+            {{ form.public1 }}
+          </div>
+          <div class="form-group">
+            {{ form.public2 }}
+          </div>
+          <div class="form-group">
+            {{ form.public3 }}
+          </div>
+          <div class="form-group">
+            <div class="form-check mt-2">
+              <sub><input type="checkbox" name="today_posts" id="today_posts" class="form-check-input"></sub>
+              <label for="today_posts" class="form-check-label">do u wanna see todays posts?</label>
+            </div>
+          </div>
+          <div class="dropdown-item">
+            <button type="sumbit" class="btn btn-danger btn-md my-2">Submit</button>
+          </div>
+        </div>
       </div>
     </form>
     {% endblock %}
