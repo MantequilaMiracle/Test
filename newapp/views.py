@@ -30,7 +30,7 @@ def registerview(request):
 
 
 @login_required
-def profile(request, username):
+def profile(request):
 	welcome_text = "Hello and welcome to mySite, "
 	context = {"welcome_text": welcome_text}
 	return render(request, "registration/profile.html", context)
@@ -54,7 +54,7 @@ def post(domain, today_posts):
 	try:
 		json_data = response.json()["response"]["items"]
 	except KeyError as e:
-		print("some problem in" + e)
+		#print(e)
 		data_list.append({"text_data": "Check the domain name", "photo_url": [], "doc_url": [], "video_url": []})
 		context = {"data": data_list}
 		return context
@@ -84,7 +84,7 @@ def post(domain, today_posts):
 				else:
 					continue
 		except KeyError as e:
-			print(e)
+			#print(e)
 			continue
 		data_list.append({"text_data": text_str, "photo_url": photo_list, "doc_url": doc_list, "video_url": video_list})
 	context = {"data": data_list, "domain": domain}
@@ -102,9 +102,6 @@ def multipost(request):
 			domains = [domain for domain in [form.cleaned_data["public%i"%i].replace(' ', '') for i in range(1,4)] if domain != '']
 			today_posts = form.cleaned_data["today_posts"]
 			for domain in domains:
-				if domain_counter >= 3:
-					domains.clear()
-					break
 				total_context.append(post(domain, today_posts))
 				domain_counter += 1
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
