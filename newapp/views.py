@@ -95,14 +95,24 @@ def multipost(request):
 	form = PostForm()
 	context = {}
 	total_context = []
+	if request.method == "GET":
+		try:
+			if request.session["domains"]:
+				for domain in request.session["domains"]:
+					total_context.append(post(domain, request.session["today_posts"]))
+				return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
+		except KeyError:
+			pass
 	if request.method == "POST":
+		total_context = []
 		form = PostForm(request.POST)
 		if form.is_valid():
-			domain_counter = 0
 			domains = [domain for domain in [form.cleaned_data["public%i"%i].replace(' ', '') for i in range(1,4)] if domain != '']
+			request.session["domains"] = domains
 			today_posts = form.cleaned_data["today_posts"]
+			request.session["today_posts"] = today_posts
+			print(request.session["today_posts"])
 			for domain in domains:
 				total_context.append(post(domain, today_posts))
-				domain_counter += 1
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
 #TODO: something writing ATTACHMENTS into console and some exceptions :'NoneType' object has no attribute 'split'
