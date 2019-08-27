@@ -1,14 +1,26 @@
+#django staff import
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+
+
+#forms import
+from django.contrib.auth.forms import UserCreationForm
 from .forms import PostForm
+
+
+#models import
+from .models import ProfileHistory
+from django.contrib.auth.models import User
+
+
+#other lib import
 import requests, time
 from .app_token import app_token, app_version
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.decorators import login_required
-# Create your views here.
 
 
 def mainpage(request):
+	#TODO: show suggestions what domains to use
 	welcome_text = "Hello and welcome to mySite. Add more text to see what happened. Теперь пишу по русски потому что можу"
 	context = {"welcome_text": welcome_text}
 	return render(request, "newapp/welcome.html", context)
@@ -31,12 +43,20 @@ def registerview(request):
 
 @login_required
 def profile(request):
+	#TODO: need to show history to an authenticated user
 	welcome_text = "Hello and welcome to mySite, "
+	#history = ProfileHistory.objects.get(history=request.user)
 	context = {"welcome_text": welcome_text}
 	return render(request, "registration/profile.html", context)
 
 
 def post(domain, today_posts):
+	'''
+	#the method using VK API method "wall.get" to get a json response with
+	#wall posts attachments.
+	#Returns dictionary with data_list and domain.
+	#data_list contains text_data, photo_url, doc_url, video_url.
+	'''
 	count = 10
 	offset = 0
 	one_day_seconds = 86400
@@ -95,6 +115,7 @@ def multipost(request):
 	form = PostForm()
 	context = {}
 	total_context = []
+	request.session.set_expiry(600)
 	if request.method == "GET":
 		try:
 			if request.session["domains"]:
@@ -111,8 +132,10 @@ def multipost(request):
 			request.session["domains"] = domains
 			today_posts = form.cleaned_data["today_posts"]
 			request.session["today_posts"] = today_posts
-			print(request.session["today_posts"])
+			if request.user.is_authenticated:
+				ph = ProfileHistory(request.user, domains=', '.join(domains), filters=today_posts)
+				ph.save()
 			for domain in domains:
 				total_context.append(post(domain, today_posts))
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
-#TODO: something writing ATTACHMENTS into console and some exceptions :'NoneType' object has no attribute 'split'
+#TODO: something goes wrong with ProfileHistory

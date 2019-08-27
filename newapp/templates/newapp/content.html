@@ -1,6 +1,6 @@
 {% extends "newapp/index.html" %}
     {% block filters %}
-    <div class="container bg-light mt-3" align="center" style="width: 316px">
+    <div class="container mt-3" align="center" style="width: 316px">
       <form action="" method="post" class="px-4 py-3">
         {% csrf_token %}
         <div class="form-group">
@@ -26,12 +26,12 @@
 
     {% endblock %}
     {% block content%}
-      <div class="container-fluid align-items-center" style="padding-left: 50px; padding-right: 100px; margin: 20px">
-        <div class="row shadow">
+      <div class="container" style="padding-left: 50px; padding-right: 100px; margin: 20px">
+        <div class="row">
           {%for context in total_context%}
-            <div class="col bg-dark" style="color: pink">
-              <p style="padding: 10px; font-family: 'Inky Thin Pixels(RUS BY LYAJKA)'; font-size: 2rem;">{{context.domain|default:"*Oops*"}}</p>
-              <hr size="4" color="pink">
+            <div class="col">
+              <p style="padding: 10px; font-size: 2rem;">{{context.domain|default:"*Oops*"}}</p>
+              <hr size="8" color="#afa">
             </div>
           {% endfor%}
         </div>
@@ -54,7 +54,7 @@
                 {% elif dataset.video_url %}
                   {% for url in dataset.video_url %}
                     <div class="card-img-top">
-                      <a href={{ url }} class="h2">Do not support video</a>
+                      <a href={{ url }}>To watch video click here</a>
                     </div>
                   {% endfor%}
                 {% endif %}
