@@ -21,7 +21,8 @@ from .app_token import app_token, app_version
 
 def mainpage(request):
 	#TODO: show suggestions what domains to use
-	welcome_text = "Hello and welcome to mySite. Add more text to see what happened. Теперь пишу по русски потому что можу"
+	welcome_text = """Hello and welcome to mySite. Add more text to see what
+	happened. Теперь пишу по русски потому что можу"""
 	context = {"welcome_text": welcome_text}
 	return render(request, "newapp/welcome.html", context)
 
@@ -43,12 +44,26 @@ def registerview(request):
 
 @login_required
 def profile(request):
-	#TODO: need to show history to an authenticated user
+	#TODO: need to add some features
 	welcome_text = "Hello and welcome to mySite, "
-	#history = ProfileHistory.objects.get(history=request.user)
 	context = {"welcome_text": welcome_text}
 	return render(request, "registration/profile.html", context)
 
+@login_required
+def history(request):
+	#TODO: need to show history to an authenticated user
+	history_user = ProfileHistory.objects.filter(
+	username=request.user.username)
+
+	history_domains = [ph.domains for ph in history_user]
+	history_date = [ph.date for ph in history_user]
+	context = {"history": dict(zip(history_domains, history_date))}
+	return render(request, "registration/history.html", context)
+
+@login_required
+def history_flush(request):
+	ProfileHistory.objects.filter(username=request.user.username).delete()
+	return HttpResponseRedirect("/accounts/profile/history")
 
 def post(domain, today_posts):
 	'''
@@ -71,13 +86,14 @@ def post(domain, today_posts):
 		"access_token": app_token,
 		"v": app_version
 		})
-	try:
-		json_data = response.json()["response"]["items"]
-	except KeyError as e:
-		#print(e)
-		data_list.append({"text_data": "Check the domain name", "photo_url": [], "doc_url": [], "video_url": []})
+	json_data = response.json()
+	if "error" in json_data:
+		data_list.append({"text_data": "Error code: %i. "%
+		json_data["error"]["error_code"] + json_data["error"]["error_msg"]})
+
 		context = {"data": data_list}
 		return context
+	json_data = json_data["response"]["items"]
 	owner_id = str(json_data[0]["owner_id"])
 	for data in json_data:
 		if today_posts:
@@ -106,7 +122,8 @@ def post(domain, today_posts):
 		except KeyError as e:
 			#print(e)
 			continue
-		data_list.append({"text_data": text_str, "photo_url": photo_list, "doc_url": doc_list, "video_url": video_list})
+		data_list.append({"text_data": text_str, "photo_url": photo_list,
+							"doc_url": doc_list, "video_url": video_list})
 	context = {"data": data_list, "domain": domain}
 	return context
 
@@ -117,13 +134,11 @@ def multipost(request):
 	total_context = []
 	request.session.set_expiry(600)
 	if request.method == "GET":
-		try:
-			if request.session["domains"]:
-				for domain in request.session["domains"]:
-					total_context.append(post(domain, request.session["today_posts"]))
-				return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
-		except KeyError:
-			pass
+		if "domains" in request.session:
+			for domain in request.session["domains"]:
+				total_context.append(post(domain, request.session["today_posts"]))
+			return render(request, "newapp/content.html",
+							{"total_context": total_context, "form": form})
 	if request.method == "POST":
 		total_context = []
 		form = PostForm(request.POST)
@@ -133,8 +148,9 @@ def multipost(request):
 			today_posts = form.cleaned_data["today_posts"]
 			request.session["today_posts"] = today_posts
 			if request.user.is_authenticated:
-				ph = ProfileHistory(request.user, domains=', '.join(domains), filters=today_posts)
-				ph.save()
+				loggedUserObject = User.objects.get(username=request.user.username)
+				ProfileHistory.objects.create(user_id=loggedUserObject,
+				username=loggedUserObject.username, domains=', '.join(domains), filters=today_posts)
 			for domain in domains:
 				total_context.append(post(domain, today_posts))
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})

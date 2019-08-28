@@ -1,0 +1,34 @@
+{% extends "newapp/index.html" %}
+  {% block content %}
+  <title>MySiteHistory</title>
+  <h2 class="py-3">{{ user.username }}`s public  history</h2>
+  <a href="flush/"> To clean the history click here</a>
+
+  <div class="container">
+    {% if history %}
+      <div class="table mr-auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Publics</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for domains, date in history.items %}
+            <tr>
+              <td> {{ domains }} </td>
+              <td> {{ date }} </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="table shadow">
+        <i>Your history is clean</i>
+      </div>
+    {% endif %}
+
+  </div>
+  {% endblock %}
