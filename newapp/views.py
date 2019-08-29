@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 #forms import
 from django.contrib.auth.forms import UserCreationForm
-from .forms import PostForm
+from .forms import PostForm, SearchForm
 
 
 #models import
@@ -21,10 +21,8 @@ from .app_token import app_token, app_version
 
 def mainpage(request):
 	#TODO: show suggestions what domains to use
-	welcome_text = """Hello and welcome to mySite. Add more text to see what
-	happened. Теперь пишу по русски потому что можу"""
-	context = {"welcome_text": welcome_text}
-	return render(request, "newapp/welcome.html", context)
+	context = publicSearch(request)
+	return render(request, "newapp/index.html", context)
 
 
 def registerview(request):
@@ -51,7 +49,7 @@ def profile(request):
 
 @login_required
 def history(request):
-	#TODO: need to show history to an authenticated user
+	'''shows history to an authenticated user'''
 	history_user = ProfileHistory.objects.filter(
 	username=request.user.username)
 
@@ -60,10 +58,45 @@ def history(request):
 	context = {"history": dict(zip(history_domains, history_date))}
 	return render(request, "registration/history.html", context)
 
+
 @login_required
 def history_flush(request):
 	ProfileHistory.objects.filter(username=request.user.username).delete()
 	return HttpResponseRedirect("/accounts/profile/history")
+
+
+def publicSearch(request):
+	form = SearchForm()
+	type = "group"
+	sort = 0
+	count = 1000
+	offset = 0
+	data_list = []
+	q = ""
+	if form.is_valid():
+		q = form.cleaned_data["request"]
+	response = requests.get("https://api.vk.com/method/groups.search?",
+		{"q": q,
+		"type": type,
+		"sort": sort,
+		"count": count,
+		"offset": offset
+		})
+	json_data = response.json()
+	if "error" in json_data:
+		data_list.append({"err": "Error code: %i. "%
+		json_data["error"]["error_code"] + json_data["error"]["error_msg"]})
+
+		context = {"data": data_list}
+		return context
+	json_data = json_data["response"]["items"]
+	#for data in json_data:
+	#	search_data = {"name": data["name"], "domain": data["screen_name"],
+	#	"photo": data["photo_100"]}
+	#	data_list.append(search_data)
+	context = {"search_data": json_data, "form_search": form}
+	return context
+
 
 def post(domain, today_posts):
 	'''

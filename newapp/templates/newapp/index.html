@@ -49,7 +49,7 @@
 		</style>
 	</head>
 	<body>
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mx-auto">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			  <a class="navbar-brand" href="/" style="font-size:1.5rem">3<span style="color: #afa">ost</span></a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
@@ -77,10 +77,16 @@
 						{% endif %}
 			    </ul>
 			  </div>
+				<form method="post" class="form-inline mt-2 mt-md-0" action="/search_results/">
+					{% csrf_token %}
+					{{from_search}}
+	        <input class="form-control mr-sm-2" id="request" name="request" type="text" placeholder="Search" aria-label="Search">
+	        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      	</form>
 			</nav>
 
 		<div class="wrapper">
-				<div class="content" align="center">
+				<div class="d-flex content" align="center">
 					{% block filters %}
 					{% endblock %}
 					{% block welcome %}
