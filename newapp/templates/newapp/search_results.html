@@ -1,5 +1,8 @@
 {% extends "newapp/index.html" %}
   {% block content %}
+    {% if err %}
+      {{err}}
+    {% endif %}
     {% for data in search_data%}
         {{data.photo_100}}
         {{data.name}}

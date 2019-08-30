@@ -16,5 +16,10 @@ class PostForm(forms.Form):
     }))
     today_posts = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={}))
 
+'''
 class SearchForm(forms.Form):
-    request = forms.CharField(max_length=150) 
+    q = forms.CharField(required=False, max_length = 30, widget=forms.TextInput(attrs={
+    "placeholder": "Search",
+    "class": "form-control ml-2 mr-2",
+    }))
+'''

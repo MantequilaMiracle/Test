@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 
 #forms import
 from django.contrib.auth.forms import UserCreationForm
-from .forms import PostForm, SearchForm
+from .forms import PostForm#, SearchForm
 
 
 #models import
@@ -21,8 +21,8 @@ from .app_token import app_token, app_version
 
 def mainpage(request):
 	#TODO: show suggestions what domains to use
-	context = publicSearch(request)
-	return render(request, "newapp/index.html", context)
+	context = {"text": "Hello and Welcome!"}
+	return render(request, "newapp/mainpage.html", context)
 
 
 def registerview(request):
@@ -65,38 +65,46 @@ def history_flush(request):
 	return HttpResponseRedirect("/accounts/profile/history")
 
 
+'''
 def publicSearch(request):
 	form = SearchForm()
 	type = "group"
 	sort = 0
-	count = 1000
+	count = 10
 	offset = 0
+	q = "пика"
+	context = {"data": [], "form": form}
 	data_list = []
-	q = ""
-	if form.is_valid():
-		q = form.cleaned_data["request"]
-	response = requests.get("https://api.vk.com/method/groups.search?",
-		{"q": q,
-		"type": type,
-		"sort": sort,
-		"count": count,
-		"offset": offset
-		})
-	json_data = response.json()
-	if "error" in json_data:
-		data_list.append({"err": "Error code: %i. "%
-		json_data["error"]["error_code"] + json_data["error"]["error_msg"]})
-
-		context = {"data": data_list}
-		return context
-	json_data = json_data["response"]["items"]
-	#for data in json_data:
-	#	search_data = {"name": data["name"], "domain": data["screen_name"],
-	#	"photo": data["photo_100"]}
-	#	data_list.append(search_data)
-	context = {"search_data": json_data, "form_search": form}
-	return context
-
+	if request.method == "POST":
+		form = SearchForm(request.POST)
+		if form.is_valid():
+			q = form.cleaned_data["q"]
+			response = requests.get("https://api.vk.com/method/groups.search?",
+				{"q": q,
+				"type": type,
+				"sort": sort,
+				"count": count,
+				"offset": offset,
+				"access_token": app_token,
+				"v": app_version
+				})
+			print(response)
+			json_data = response.json()
+			print(json_data)
+			if "error" in json_data:
+				context = {"err": "Error code: %i. "%json_data["error"]["error_code"] + json_data["error"]["error_msg"]}
+				return context
+			json_data = json_data["response"]["items"]
+			for data in json_data:
+				search_data = {"name": data["name"], "domain": data["screen_name"],
+				"photo": data["photo_100"]}
+				data_list.append(search_data)
+			print(data_list)
+			context = {"data": data_list, "form": form}
+		else:
+			context = {"err": "something wrong with form"}
+	return render(request, "newapp/search_results.html", context)
+'''
 
 def post(domain, today_posts):
 	'''
