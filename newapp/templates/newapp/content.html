@@ -1,30 +1,28 @@
 {% extends "newapp/index.html" %}
-    {% block filters %}
-    <div class="container mt-3" align="center" style="width: 316px">
-      <form action="" method="post" class="px-4 py-3">
-        {% csrf_token %}
-        <div class="form-group">
-          {{ form.public1 }}
-        </div>
-        <div class="form-group">
-          {{ form.public2 }}
-        </div>
-        <div class="form-group">
-          {{ form.public3 }}
-        </div>
-        <div class="form-group">
-          <div class="form-check mr-auto">
-            <input type="checkbox" name="today_posts" id="today_posts" class="form-check-input">
-            <label for="today_posts" for="today_posts" class="form-check-label">
-               todays posts?
-            </label>
-          </div>
-        </div>
-        <button type="sumbit" class="btn btn-outline-success btn-md my-2">Submit</button>
-      </form>
-    </div>
-    {% endblock %}
     {% block content%}
+      <div class="container mt-3" align="center" style="width: 316px">
+        <form action="" method="post" clas  s="px-4 py-3">
+          {% csrf_token %}
+          <div class="form-group">
+            {{ form.public1 }}
+          </div>
+          <div class="form-group">
+            {{ form.public2 }}
+          </div>
+          <div class="form-group">
+            {{ form.public3 }}
+          </div>
+          <div class="form-group">
+            <div class="form-check mr-auto">
+              <input type="checkbox" name="today_posts" id="today_posts" class="form-check-input">
+              <label for="today_posts" for="today_posts" class="form-check-label">
+                 todays posts?
+              </label>
+            </div>
+          </div>
+          <button type="sumbit" class="btn btn-outline-success btn-md my-2">Submit</button>
+        </form>
+      </div>
       <div class="container" style="padding-left: 50px; padding-right: 100px; margin: 20px">
         <div class="row">
           {%for context in total_context%}
