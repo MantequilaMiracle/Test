@@ -65,6 +65,7 @@ def history_flush(request):
 	return HttpResponseRedirect("/accounts/profile/history")
 
 
+#TODO: User authorization over VK form
 '''
 def publicSearch(request):
 	form = SearchForm()
@@ -72,7 +73,7 @@ def publicSearch(request):
 	sort = 0
 	count = 10
 	offset = 0
-	q = "пика"
+	q = ""
 	context = {"data": [], "form": form}
 	data_list = []
 	if request.method == "POST":
