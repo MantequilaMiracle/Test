@@ -7,64 +7,47 @@
 		<!-- need to add favicon-->
 		<title>3ost</title>
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-		<!--<style>
-			* {
-			font-family:
-				  -apple-system,
-				  BlinkMacSystemFont,
-				  Segoe UI, Roboto,
-				  Oxygen, Ubuntu,
-				  Cantarell, Fira
-				  Sans, Droid Sans,
-				  Helvetica Neue,
-				  sans-serif;
-		  margin: 0;
-		  padding: 0;
-			}
-			html,body{
-				height: 100%;
-			}
-
-			.header {
-				justify-content: flex-start;
-				flex: 0 0 auto;
-			}
-			.footer {
-				flex: 0 0;
-			}
-			.content{
-				flex: 1 0 auto;
-			}
-			.wrapper{
-				overflow-x: hidden;
-				background-color: white;
-				display: flex;
-				flex-direction: column;
-				min-height: 100%;
-			}
-		</style>-->
+		<style>
+		html,body{
+			height: 100%;
+		}
+		.wrapper{
+			overflow-x: hidden;
+			background-color: white;
+			display: flex;
+			flex-direction: column;
+			min-height: 100%;
+		}
+		.footer {
+			flex: 0 0;
+		}
+		</style>
 	</head>
 	<body>
-		<nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light">
-			  <a class="navbar-brand" href="/" style="font-size:1.5rem">3<span style="color: #faf">ost</span></a>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<div class="container">
+				<a class="navbar-brand" href="/" style="font-size:1.5rem">3<span style="color: #faf">ost</span></a>
 			  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
 
 			  <div class="collapse navbar-collapse" id="navbarSupportedContent">
 			    <ul class="navbar-nav mr-auto">
-			      <li class="nav-item">
+			      <li class="nav-item" active>
 			        <a class="nav-link" href="/posts/">PostZ</a>
 			      </li>
 						{% if user.is_authenticated %}
 							<li class="nav-item">
-				        <a class="nav-link" href="/accounts/profile/">{{ user.username }}</a>
-				      </li>
-							<li class="nav-item">
-				        <a class="nav-link" href="/accounts/logout/">logout</a>
+								<div class="dropdown">
+									<button class="btn btn-outline dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								    {{ user.username }}
+								  </button>
+								  <div class="dropdown-menu" aria-labelledby="dropdownMenu2" align="center">
+										<a href="/accounts/profile/"><button class="dropdown-item" type="button">Profile</button></a>
+										<a href="/accounts/profile/history"><button class="dropdown-item" type="button">History</button></a>
+										<a href="/accounts/logout/"><button class="dropdown-item" type="button">logout</button></a>
+								  </div>
+								</div>
 				      </li>
 						{% else %}
 				      <li class="nav-item">
@@ -76,12 +59,13 @@
 						{% endif %}
 			    </ul>
 			  </div>
+				</div>
 			</nav>
-			<div class="">
+			<div class="wrapper">
 				{% block content %}
 				{% endblock %}
 			</div>
-			<footer>
+			<footer class="container">
 				<a style="padding-left:15px">@Nunyapa</a>
 				<a href="https://github.com/Nunyapa/DjangoSite" class="text-light">
 					<svg class="icon icon-github" xmlns="http://www.w3.org/2000/svg" width="24" height="28" viewBox="0 0 24 28" aria-label="GitHub" role="img" focusable="false">
@@ -89,5 +73,8 @@
 					</svg>
 				</a>
 			</footer>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
 </html>

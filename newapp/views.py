@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 
 
 #forms import
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .forms import PostForm#, SearchForm
 
 
@@ -43,16 +43,28 @@ def registerview(request):
 @login_required
 def profile(request):
 	#TODO: need to add some features
+	form = UserChangeForm()
+	current_user = User.objects.get(username=request.user.username)
+	if request.method == "POST":
+		print("berfore valid")
+		form = UserChangeForm(request.POST)
+		if form.is_valid():
+			print("after valid")
+			if not current_user.first_name:
+				current_user.first_name = form.cleaned_data['first_name']
+			if not current_user.last_name:
+				current_user.last_name = form.cleaned_data['last_name']
+			if not current_user.email:
+				current_user.email = form.cleaned_data['email']
+			current_user.save()
 	welcome_text = "Hello and welcome to mySite, "
-	context = {"welcome_text": welcome_text}
+	context = {"welcome_text": welcome_text, "form": form}
 	return render(request, "registration/profile.html", context)
 
 @login_required
 def history(request):
 	'''shows history to an authenticated user'''
-	history_user = ProfileHistory.objects.filter(
-	username=request.user.username)
-
+	history_user = ProfileHistory.objects.filter(username=request.user.username)
 	history_domains = [ph.domains for ph in history_user]
 	history_date = [ph.date for ph in history_user]
 	context = {"history": dict(zip(history_domains, history_date))}
