@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 
 
 #forms import
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .forms import PostForm#, SearchForm
+from django.contrib.auth.forms import UserCreationForm
+from .forms import PostForm, UserProfileForm#, SearchForm
 
 
 #models import
@@ -17,6 +17,10 @@ from django.contrib.auth.models import User
 #other lib import
 import requests, time
 from .app_token import app_token, app_version
+
+
+#constants
+ONE_DAY_SECONDS = 86400
 
 
 def mainpage(request):
@@ -43,11 +47,11 @@ def registerview(request):
 @login_required
 def profile(request):
 	#TODO: need to add some features
-	form = UserChangeForm()
+	form = UserProfileForm()
 	current_user = User.objects.get(username=request.user.username)
 	if request.method == "POST":
 		print("berfore valid")
-		form = UserChangeForm(request.POST)
+		form = UserProfileForm(request.POST)
 		if form.is_valid():
 			print("after valid")
 			if not current_user.first_name:
@@ -57,6 +61,7 @@ def profile(request):
 			if not current_user.email:
 				current_user.email = form.cleaned_data['email']
 			current_user.save()
+			return HttpResponseRedirect("/accounts/profile/")
 	welcome_text = "Hello and welcome to mySite, "
 	context = {"welcome_text": welcome_text, "form": form}
 	return render(request, "registration/profile.html", context)
@@ -128,7 +133,6 @@ def post(domain, today_posts):
 	'''
 	count = 10
 	offset = 0
-	one_day_seconds = 86400
 	context = {}
 	if today_posts:
 		count = 100
@@ -151,7 +155,7 @@ def post(domain, today_posts):
 	owner_id = str(json_data[0]["owner_id"])
 	for data in json_data:
 		if today_posts:
-			if data["date"] < (int(time.time())-one_day_seconds):
+			if data["date"] < (int(time.time())-ONE_DAY_SECONDS):
 				continue
 		text_str = data["text"]
 		photo_list = []
@@ -186,7 +190,7 @@ def multipost(request):
 	form = PostForm()
 	context = {}
 	total_context = []
-	request.session.set_expiry(600)
+	request.session.set_expiry(1200)
 	if request.method == "GET":
 		if "domains" in request.session:
 			for domain in request.session["domains"]:

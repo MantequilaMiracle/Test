@@ -23,3 +23,8 @@ class SearchForm(forms.Form):
     "class": "form-control ml-2 mr-2",
     }))
 '''
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "email"]
