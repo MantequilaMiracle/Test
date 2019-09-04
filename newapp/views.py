@@ -212,4 +212,3 @@ def multipost(request):
 			for domain in domains:
 				total_context.append(post(domain, today_posts))
 	return render(request, "newapp/content.html", {"total_context": total_context, "form": form})
-#TODO: something goes wrong with ProfileHistory

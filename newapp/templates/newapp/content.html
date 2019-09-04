@@ -1,5 +1,6 @@
 {% extends "newapp/index.html" %}
     {% block content%}
+    <div class="container">
       <div class="container mt-3" style="width: 316px">
         <form action="" method="post" clas  s="px-4 py-3">
           {% csrf_token %}
@@ -23,7 +24,8 @@
           <button type="sumbit" class="btn btn-outline-success btn-md my-2">Submit</button>
         </form>
       </div>
-      <div class="container shadow" style="padding-left: 50px; padding-right: 100px; margin: 20px">
+
+      <div class="container shadow" style="padding-left: 50px; padding-right: 100px; margin: 20px" align="center">
         <div class="row">
           {%for context in total_context%}
             <div class="col">
@@ -66,4 +68,5 @@
           {% endfor %}
         </div>
       </div>
+    </div>
     {% endblock %}
