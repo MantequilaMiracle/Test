@@ -2,6 +2,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 #forms import
@@ -80,6 +81,12 @@ def history(request):
 def history_flush(request):
 	ProfileHistory.objects.filter(username=request.user.username).delete()
 	return HttpResponseRedirect("/accounts/profile/history")
+
+
+@login_required
+def logout_view(request):
+	logout(request)
+	return HttpResponseRedirect("/")
 
 
 #TODO: User authorization over VK form

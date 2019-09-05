@@ -27,16 +27,10 @@
 
       <div class="container shadow" style="padding-left: 50px; padding-right: 100px; margin: 20px" align="center">
         <div class="row">
-          {%for context in total_context%}
+          {% for context in total_context %}
             <div class="col">
               <p style="padding: 10px; font-size: 2rem;">{{context.domain|default:"*Oops*"}}</p>
               <hr size="8" color="#afa">
-            </div>
-          {% endfor%}
-        </div>
-        <div class="row">
-          {% for context in total_context %}
-            <div class="col bg-light">
               {% for dataset in context.data %}
                 {% if dataset.photo_url %}
                   <div class="card-img-top">
