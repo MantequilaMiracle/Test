@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "newapp/index.html" %}
     {% block title %}
     3ost:PostZ
@@ -73,3 +74,71 @@
       </div>
     </div>
     {% endblock %}
+=======
+{% extends "newapp/index.html" %}
+    {% block content%}
+    <div class="container">
+      <div class="container mt-3" style="width: 316px">
+        <form action="" method="post" clas  s="px-4 py-3">
+          {% csrf_token %}
+          <div class="form-group">
+            {{ form.public1 }}
+          </div>
+          <div class="form-group">
+            {{ form.public2 }}
+          </div>
+          <div class="form-group">
+            {{ form.public3 }}
+          </div>
+          <div class="form-group">
+            <div class="form-check mr-auto">
+              <input type="checkbox" name="today_posts" id="today_posts" class="form-check-input">
+              <label for="today_posts" for="today_posts" class="form-check-label">
+                 todays posts?
+              </label>
+            </div>
+          </div>
+          <button type="sumbit" class="btn btn-outline-success btn-md my-2">Submit</button>
+        </form>
+      </div>
+
+      <div class="container shadow" style="padding-left: 50px; padding-right: 100px; margin: 20px" align="center">
+        <div class="row">
+          {% for context in total_context %}
+            <div class="col">
+              <p style="padding: 10px; font-size: 2rem;">{{context.domain|default:"*Oops*"}}</p>
+              <hr size="8" color="#afa">
+              {% for dataset in context.data %}
+                {% if dataset.photo_url %}
+                  <div class="card-img-top">
+                  {% for url in dataset.photo_url %}
+                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail" height="700" width="500"></a>
+                  {% endfor%}
+                  </div>
+                {% elif dataset.doc_url %}
+                  {% for url in dataset.doc_url%}
+                    <div class="card-img-top">
+                      <a href="{{ url }}"><img src="{{ url }}" alt="{{ dataset.text_data|truncatewords:5 }}..." class="img-thumbnail"></a><br/>
+                    </div>
+                  {% endfor%}
+                {% elif dataset.video_url %}
+                  {% for url in dataset.video_url %}
+                    <div class="card-img-top">
+                      <a href={{ url }}>To watch video click here</a>
+                    </div>
+                  {% endfor%}
+                {% endif %}
+                {% if dataset.text_data %}
+                  <div class="card-body rounded bg-primary">
+                    <a class="card-text text-white py-3 my-3" style="font-family: 'Times new roman';font-size: 150%">{{ dataset.text_data }}</a>
+                  </div>
+                {% endif %}
+                <hr size="6" color="black">
+              {% endfor%}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endblock %}
+>>>>>>> master

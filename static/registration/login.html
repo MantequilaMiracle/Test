@@ -1,0 +1,36 @@
+{% extends "newapp/index.html" %}
+
+  {% block content %}
+    <div class="d-flex justify-content-center mt-3">
+      {% if form.errors %}
+      <div class="alert alert-danger">
+          <p>Your username and password didn't match. Please try again.</p>
+      </div>
+      {% endif %}
+      {% if next %}
+        {% if user.is_authenticated %}
+        <div class="alert alert-warning">
+          <p>Your account doesn't have access to this page. To proceed,
+          please login with an account that has access.</p>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+          <p>Please login to see this page.</p>
+        </div>
+        {% endif %}
+      {% endif %}
+    </div>
+    <div class="container py-3 my-2 rounded shadow bg-white" style="width: 300px;" align="center">
+      <h2 style="color: pink">Log in</h2>
+      <div class="form-group">
+        <form method="post" action="{% url 'login' %}" class="form-signin">
+          {% csrf_token %}
+          <input type="text" name="username" id="id_username" class="form-control" placeholder="Username" required="" autofocus="">
+          <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required="" autofocus="">
+          <input class="btn btn-block btn-primary" type="submit" value="login" />
+        </form>
+        {# Assumes you setup the password_reset view in your URLconf #}
+        <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+      </div>
+    </div>
+  {% endblock %}
